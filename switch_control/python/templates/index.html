@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    function ajaxRequest() {
+  const checked = document.getElementById("mycheckbox").checked;
+  console.log("Sending data to the server that the checkbox is", checked);
+
+  // Use the XMLHttpRequest API
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() {
+    console.log("Result sent to server!");
+  }
+  xhttp.open("POST", "/", true);
+  xhttp.send();
+}
+  </script>
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+html, body {
+    height: 100%;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+</style>
+</head>
+<body  style="background-color:black;">
+  <h1 style="color:white;">IOT Lamp Switch</h1>
+
+
+
+  <label class="switch">
+    {% if state=='ON' %}
+      <input type="checkbox" checked>
+    {% endif %}
+     {% if state=='OFF' %}
+    <input type="checkbox" >
+     {% endif %}
+
+  <span class="slider round"></span>
+</label>
+
+  <div class="result"></div>
+  <script>
+    document
+      .querySelector("input")
+      .addEventListener("click", e => {
+        fetch("/", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              c_check: Number(e.target.checked)
+            })
+          })
+          .then(res => {
+            if (!res.ok) {
+              throw Error(res.status);
+            }
+
+            return res.json();
+          })
+          .then(({data: {val}}) => {
+            console.log(val);
+            const res = document.querySelector(".result");
+
+          })
+          .catch(err => console.error(err))
+        ;
+      })
+    ;
+  </script>
+</body>
+
+
+</html>
