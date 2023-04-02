@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <title>Weather</title>
+   </head>
+<style>
+    html, body {
+    height: 100%;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+</style>
+
+<script type="text/javascript">
+        function update() {
+            let doc1 = document.getElementById("rain");
+            let doc2 = document.getElementById("temp");
+            let doc3 = document.getElementById("hum");
+
+            fetch("/ui").then(
+                response => response.json()
+            ).then(
+                function(data) {
+                    console.log(data["rain"]);
+                    doc1.innerText = "Rain Sensor: " + data["rain"];
+                    doc2.innerText = data["temp"] + " °C";
+                    doc3.innerText = "Humidity: " + data["hum"] + "%";
+
+            });
+        }
+
+        // update all 10000 ms
+        (function () {
+            update();
+            setInterval(function () {
+                update();
+            }, 1000);
+        })();
+   </script>
+
+<body style="background-color:lightblue;">
+    <h1 id ="temp" style="font-size: 60px;">
+        <b> {{temp}} °C </b>
+    </h1>
+
+    <h2 id="hum" style="font-size: 30px;">
+        <b> Humidity: {{hum}}% </b>
+    </h2>
+
+    <h2 id="rain" style="font-size: 30px;">
+        <b> Rain Sensor: {{rain}} </b>
+    </h2>
+
+</body>
+
+
+</html>
