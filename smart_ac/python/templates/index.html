@@ -1,0 +1,68 @@
+<html>
+
+    <head>
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <style>
+        div.horizontalgap {
+  float: left;
+  overflow: hidden;
+  height: 50px;
+  width: 0px;
+}
+     
+    html, body {
+    height: 100%;
+  }
+
+ input[type=submit] {
+    background-color: #03a5fc; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+  
+
+/* identical to box height */
+
+letter-spacing: 0.2em;
+}
+
+html, body {
+    height: 100%;
+}
+
+  html {
+      display: table;
+      margin: auto;
+
+  }
+
+  body {
+      display: table-cell;
+      vertical-align: middle;
+  }
+    </style>
+    </head>
+    <body style="background-color:black;">
+    <h1 style="color:white; font-family: 'Impact'; font-style: normal; font-weight: 400; font-size: 48px; line-height: 59px; ">AC &nbsp CONTROLLER</h1>
+        <form method="POST" action="/">
+              <input type="submit" value="ON" name="button_on" style="height:50px; width:100px"/>
+               <img src="{{url_for('static', filename='snowflake1bg.png')}}" style="height:50px; width:100px "/>
+
+              <input type="submit" value="OFF" name="button_off" style="height:50px; width:100px"/>
+              <hr>
+              <br><br><br>
+              <input type="submit" value="18° C" name="button_18" style="height:50px; width:100px"/ />
+              <input type="submit" value="24° C" name="button_24" style="height:50px; width:100px"/ />
+              <input type="submit" value="30° C" name="button_30" style="height:50px; width:100px"/ />
+              <br><br><br>
+              <input type="submit" value="RESET" name="button_reset" style="height:50px; width:310px" />
+           
+        </form>
+    </body>
+</html>
