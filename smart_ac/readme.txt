@@ -1,0 +1,1 @@
+Code used to get remote IT codes for different AC settings: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDump/ReceiveDump.ino
