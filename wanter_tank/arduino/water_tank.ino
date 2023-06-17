@@ -1,5 +1,10 @@
-#include <SoftwareSerial.h>
-SoftwareSerial espSerial(5, 6);
+//variabled for stepper motor
+#define STEPPER_PIN_1 8
+#define STEPPER_PIN_2 9
+#define STEPPER_PIN_3 10
+#define STEPPER_PIN_4 11
+int step_number = 0;
+
 
 // Variables for flow sensor
 byte sensorInterrupt = 0;  // 0 = digital pin 2
@@ -17,11 +22,132 @@ int motor_state = 0;
 
  
 
+void OneStep(bool dir){
+    if(dir){
+switch(step_number){
+  case 0:
+  digitalWrite(STEPPER_PIN_1, HIGH);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, LOW);
+  break;
+  case 1:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, HIGH);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, LOW);
+  break;
+  case 2:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, HIGH);
+  digitalWrite(STEPPER_PIN_4, LOW);
+  break;
+  case 3:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, HIGH);
+  break;
+} 
+  }else{
+    switch(step_number){
+  case 0:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, HIGH);
+  break;
+  case 1:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, HIGH);
+  digitalWrite(STEPPER_PIN_4, LOW);
+  break;
+  case 2:
+  digitalWrite(STEPPER_PIN_1, LOW);
+  digitalWrite(STEPPER_PIN_2, HIGH);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, LOW);
+  break;
+  case 3:
+  digitalWrite(STEPPER_PIN_1, HIGH);
+  digitalWrite(STEPPER_PIN_2, LOW);
+  digitalWrite(STEPPER_PIN_3, LOW);
+  digitalWrite(STEPPER_PIN_4, LOW);
+ 
+  
+} 
+  }
+step_number++;
+  if(step_number > 3){
+    step_number = 0;
+  }
+}
 struct level {
     int filled;
     int empty;
 };
 
+void turn_on()
+{
+  int turn;
+  turn =0;
+    while(turn<1)
+    {
+   for(int i=0;i<512;i++)
+   {
+    OneStep(false);
+    delay(2);
+  
+    
+   }
+   turn++;
+    }
+
+    turn =0;
+    while(turn<1)
+    {
+   for(int i=0;i<512;i++)
+   {
+    OneStep(true);
+    delay(2);
+  
+    
+   }
+   turn++;
+    }
+  
+}
+void turn_off()
+{
+  int turn;
+  turn =0;
+  while(turn<1)
+  {
+  for(int i=0;i<512;i++)
+ {
+  OneStep(true);
+  delay(2);
+  
+ }
+ turn++;
+  }
+
+  turn =0;
+  while(turn<1)
+  {
+  for(int i=0;i<512;i++)
+ {
+  OneStep(false);
+  delay(2);
+  
+ }
+ turn++;
+  }
+  
+  
+}
 void pulseCounter()
 {
   // Increment the pulse counter
@@ -77,10 +203,16 @@ void setup()
   
   // Setup for ultra sonic sensor
   Serial.begin(9600);
-  espSerial.begin(9600);
   pinMode(pingPin, OUTPUT);
    pinMode(echoPin, INPUT);
 
+  //setup for stepper motor
+
+  
+pinMode(STEPPER_PIN_1, OUTPUT);
+pinMode(STEPPER_PIN_2, OUTPUT);
+pinMode(STEPPER_PIN_3, OUTPUT);
+pinMode(STEPPER_PIN_4, OUTPUT);
 
  // Setup for flow sensor
   pinMode(sensorPin, INPUT);
@@ -144,7 +276,7 @@ void loop()
     {
       motor_state=1;
       digitalWrite(13, HIGH);
-      espSerial.println('1');
+      turn_on();
  
       delay(5000);
     }
@@ -155,7 +287,7 @@ void loop()
     if (motor_state==1)
     {
     digitalWrite(13, LOW);
-    espSerial.println('0');
+    turn_off();
      delay(1000);
     }
   }
@@ -178,7 +310,7 @@ void loop()
     {
       digitalWrite(13, LOW);
       motor_state=0;
-      espSerial.println('0');
+      turn_off();
       delay(10000);
     }
     
