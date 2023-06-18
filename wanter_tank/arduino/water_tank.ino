@@ -1,9 +1,7 @@
-//variabled for stepper motor
-#define STEPPER_PIN_1 8
-#define STEPPER_PIN_2 9
-#define STEPPER_PIN_3 10
-#define STEPPER_PIN_4 11
-int step_number = 0;
+//variabled for servo motor
+#include <Servo.h> 
+int servoPin = 5;
+Servo Servo1; 
 
 
 // Variables for flow sensor
@@ -22,68 +20,7 @@ int motor_state = 0;
 
  
 
-void OneStep(bool dir){
-    if(dir){
-switch(step_number){
-  case 0:
-  digitalWrite(STEPPER_PIN_1, HIGH);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 1:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, HIGH);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 2:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, HIGH);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 3:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, HIGH);
-  break;
-} 
-  }else{
-    switch(step_number){
-  case 0:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, HIGH);
-  break;
-  case 1:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, HIGH);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 2:
-  digitalWrite(STEPPER_PIN_1, LOW);
-  digitalWrite(STEPPER_PIN_2, HIGH);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
-  break;
-  case 3:
-  digitalWrite(STEPPER_PIN_1, HIGH);
-  digitalWrite(STEPPER_PIN_2, LOW);
-  digitalWrite(STEPPER_PIN_3, LOW);
-  digitalWrite(STEPPER_PIN_4, LOW);
- 
-  
-} 
-  }
-step_number++;
-  if(step_number > 3){
-    step_number = 0;
-  }
-}
+
 struct level {
     int filled;
     int empty;
@@ -91,60 +28,22 @@ struct level {
 
 void turn_on()
 {
-  int turn;
-  turn =0;
-    while(turn<1)
-    {
-   for(int i=0;i<512;i++)
-   {
-    OneStep(false);
-    delay(2);
-  
-    
-   }
-   turn++;
-    }
+  Servo1.write(130); 
+  delay(500);
 
-    turn =0;
-    while(turn<1)
-    {
-   for(int i=0;i<512;i++)
-   {
-    OneStep(true);
-    delay(2);
+  Servo1.write(75); 
+  delay(500);
   
-    
-   }
-   turn++;
-    }
   
 }
 void turn_off()
 {
-  int turn;
-  turn =0;
-  while(turn<1)
-  {
-  for(int i=0;i<512;i++)
- {
-  OneStep(true);
-  delay(2);
-  
- }
- turn++;
-  }
+  Servo1.write(10); 
+  delay(500);
 
-  turn =0;
-  while(turn<1)
-  {
-  for(int i=0;i<512;i++)
- {
-  OneStep(false);
-  delay(2);
-  
- }
- turn++;
-  }
+  Servo1.write(75); 
+  delay(500);
+
   
   
 }
@@ -199,6 +98,11 @@ struct level check_level()
 }
 void setup()
 {
+  // Setup for ultra serrvo sensor
+  Servo1.attach(servoPin); 
+  Servo1.write(75);
+
+
   pinMode(13, OUTPUT);
   
   // Setup for ultra sonic sensor
@@ -206,14 +110,7 @@ void setup()
   pinMode(pingPin, OUTPUT);
    pinMode(echoPin, INPUT);
 
-  //setup for stepper motor
-
-  
-pinMode(STEPPER_PIN_1, OUTPUT);
-pinMode(STEPPER_PIN_2, OUTPUT);
-pinMode(STEPPER_PIN_3, OUTPUT);
-pinMode(STEPPER_PIN_4, OUTPUT);
-
+ 
  // Setup for flow sensor
   pinMode(sensorPin, INPUT);
   pinMode(13, OUTPUT);
@@ -242,17 +139,7 @@ bool is_water_flowing()
     
       
     unsigned int frac;
-    
-    // Print the flow rate for this second in litres / minute
-//    Serial.print("Flow rate: ");
-//    Serial.print(int(flowRate));  // Print the integer part of the variable
-//    Serial.print("L/min");
-//    Serial.print("\t");       // Print tab space
-//    Serial.println();
 
-    
-
-    // Reset the pulse counter so we can start incrementing again
     pulseCount = 0;
     
     // Enable the interrupt again now that we've finished sending output
@@ -316,17 +203,6 @@ void loop()
     
   }
   
-  /*
-  
-   if (flow)
-   {
-    //Serial.println(flow);
-    digitalWrite(13, HIGH);
-   }
-   else
-   {
-    digitalWrite(13, LOW);
-   }
-   */
+ 
    
 }
