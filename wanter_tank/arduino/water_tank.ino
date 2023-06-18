@@ -198,7 +198,7 @@ void loop()
       digitalWrite(13, LOW);
       motor_state=0;
       turn_off();
-      delay(10000);
+      delay(600000);
     }
     
   }
